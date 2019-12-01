@@ -1,0 +1,38 @@
+module trafficlight_tb;
+reg a;
+reg b;
+reg clk;
+reg reset;
+wire r1,r2,g1,g2,y1,y2;
+trafficlight uut(.a(a), .b(b), .clk(clk),.reset(reset), .r1(r1),.r2(r2),.g1(g1),.g2(g2),.y1(y1),.y2(y2));
+initial
+ begin
+  clk=1'b1;
+  forever #5 clk=~clk;
+  end
+initial 
+  begin
+  reset =1'b1;
+    #15;
+    reset=1'b0;
+    #1000;
+ end
+initial begin
+a=1'b0;
+b=1'b0;
+#20;
+a=1'b0;
+b=1'b0;
+#20;
+a=1'b0;
+b=1'b0;
+#20;
+a=1'b0;
+b=1'b0;
+#20;
+a=1'b1;
+b=1'b0;
+#20;
+$finish;
+end
+endmodule

@@ -1,0 +1,52 @@
+module trafficlight(
+input a,b,clk,reset,//a and b are push buttons 
+output r1,r2,g1,g2,y1,y2// correlate to the traffic lights
+);
+localparam[2:0] A = 2'b00,B = 2'b01,C = 2'b10,D = 2'b11;//parameter combinations/states
+reg[2:0] s_reg, s_next;//next state and current state
+		//reset logic
+		always @(posedge clk, posedge reset)
+			if (reset)
+				s_reg <= A;
+			else
+				s_reg <= s_next;
+//state Cases
+		always @(s_reg or a or b)
+				case (s_reg)
+					A:case ({a,b})
+							2'b10 : s_next = C;
+							2'b01 : s_next = A;
+							2'b11: s_next=  A;
+							default s_next = B;
+						endcase
+						
+					B:case({a,b})
+							2'b10 : s_next = C;
+						    2'b11 : s_next = A;
+							2'b01: s_next = A;				
+							default:s_next = C;
+						endcase
+						
+					C:case({a,b})
+							2'b11 : s_next = A;
+							2'b01 : s_next = A;
+							2'b10 : s_next = C;				
+							default:s_next = D;
+						endcase	
+						
+					D:case({a,b})
+							2'b11 : s_next = A;
+							2'b01 : s_next = A;
+							2'b10 : s_next = C;				
+							default: s_next = A;
+						endcase
+				endcase	
+//assignment of outputs
+		assign r1 = (s_reg == A || s_reg == B);
+		assign r2 = (s_reg == C || s_reg == D);
+		assign y1 = (s_reg == D);
+        assign y2 = (s_reg == B) ;
+        assign g1 = (s_reg == C);
+        assign g2 = (s_reg == A);
+		
+endmodule
